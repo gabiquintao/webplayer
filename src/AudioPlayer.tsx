@@ -1,60 +1,51 @@
 import React, { useRef, useState, useEffect } from "react";
 import "./App.css";
 
-const AudioPlayer: React.FC = () => {
-  const audioUrlOne =
-    "https://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3";
-  const audioUrlTwo =
-    "https://commondatastorage.googleapis.com/codeskulptor-assets/sounddogs/thrust.mp3";
+const playlist = [
+  {
+    title: "Song One",
+    url: "https://docs.google.com/uc?export=download&id=1MbOD0Vk9PrHSJOe9I2ocWYimu1zrTEiB",
+  },
+  {
+    title: "Song Two",
+    url: "https://commondatastorage.googleapis.com/codeskulptor-assets/sounddogs/thrust.mp3",
+  },
+];
 
+const AudioPlayer: React.FC = () => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
-  const [selectedAudio, setSelectedAudio] = useState("audioOne");
+  const [currentIndex, setCurrentIndex] = useState(0);
 
-  const getAudioUrl = (key: string) => {
-    switch (key) {
-      case "audioOne":
-        return audioUrlOne;
-      case "audioTwo":
-        return audioUrlTwo;
-      default:
-        return "audioOne";
-    }
-  };
+  const currentAudio = playlist[currentIndex];
 
   useEffect(() => {
-    const audio = new Audio(getAudioUrl(selectedAudio));
+    const audio = new Audio(currentAudio.url);
     audioRef.current = audio;
 
     const handleLoadedMetadata = () => {
       setTotalTime(audio.duration);
     };
 
-    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
-
-    return () => {
-      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
-      audio.pause();
-    };
-  }, [selectedAudio]);
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
     const updateTime = () => {
       setCurrentTime(audio.currentTime);
     };
 
+    audio.addEventListener("loadedmetadata", handleLoadedMetadata);
+    audio.addEventListener("timeupdate", updateTime);
+
     if (isPlaying) {
-      audio.addEventListener("timeupdate", updateTime);
+      audio.play();
     }
+
     return () => {
+      audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
       audio.removeEventListener("timeupdate", updateTime);
+      audio.pause();
     };
-  }, [isPlaying]);
+  }, [currentAudio, isPlaying]);
 
   const handlePlay = () => {
     if (audioRef.current) {
@@ -78,13 +69,31 @@ const AudioPlayer: React.FC = () => {
     }
   };
 
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev + 1) % playlist.length);
+  };
+
+  const handlePrevious = () => {
+    setCurrentIndex((prev) => (prev === 0 ? playlist.length - 1 : prev - 1));
+  };
+
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setCurrentIndex(Number(e.target.value));
+  };
+
   return (
     <div className="audio-player">
-      {isPlaying ? (
-        <button onClick={handlePause}>Pause</button>
-      ) : (
-        <button onClick={handlePlay}>Play</button>
-      )}
+      <h3>{currentAudio.title}</h3>
+
+      <div>
+        <button onClick={handlePrevious}>Previous</button>
+        {isPlaying ? (
+          <button onClick={handlePause}>Pause</button>
+        ) : (
+          <button onClick={handlePlay}>Play</button>
+        )}
+        <button onClick={handleNext}>Next</button>
+      </div>
 
       <input
         type="range"
@@ -95,21 +104,23 @@ const AudioPlayer: React.FC = () => {
         onChange={handleSeek}
       />
 
-      <label>
-        Choose a song
-        <select
-          name="songs"
-          id="songs"
-          value={selectedAudio}
-          onChange={(e) => setSelectedAudio(e.target.value)}
-        >
-          <option value="audioOne">audioOne</option>
-          <option value="audioTwo">audioTwo</option>
-        </select>
-      </label>
+      <div>
+        <label>
+          Choose a song:
+          <select value={currentIndex} onChange={handleSelectChange}>
+            {playlist.map((track, index) => (
+              <option key={index} value={index}>
+                {track.title}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
 
-      <span>Current Time: {currentTime.toFixed(2)}s</span>
-      <span>Total: {totalTime.toFixed(2)}s</span>
+      <div>
+        <span>Current: {currentTime.toFixed(2)}s</span> /{" "}
+        <span>Total: {totalTime.toFixed(2)}s</span>
+      </div>
     </div>
   );
 };
