@@ -4,7 +4,7 @@ import "./App.css";
 const playlist = [
   {
     title: "Song One",
-    url: "in-my-feelings.mp3",
+    url: "/in-my-feelings.mp3",
   },
   {
     title: "Song Two",
@@ -69,6 +69,18 @@ const AudioPlayer: React.FC = () => {
     }
   };
 
+  const handleBackwards = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime -= 10;
+    }
+  };
+
+  const handleForward = () => {
+    if (audioRef.current) {
+      audioRef.current.currentTime += 10;
+    }
+  };
+
   const handleNext = () => {
     setCurrentIndex((prev) => (prev + 1) % playlist.length);
   };
@@ -87,11 +99,13 @@ const AudioPlayer: React.FC = () => {
 
       <div>
         <button onClick={handlePrevious}>Previous</button>
+        <button onClick={handleBackwards}>Backwards</button>
         {isPlaying ? (
           <button onClick={handlePause}>Pause</button>
         ) : (
           <button onClick={handlePlay}>Play</button>
         )}
+        <button onClick={handleForward}>Forward</button>
         <button onClick={handleNext}>Next</button>
       </div>
 
