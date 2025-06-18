@@ -2,16 +2,30 @@ import React, { useRef, useState, useEffect } from "react";
 import "./App.css";
 
 const AudioPlayer: React.FC = () => {
-  const audioUrl =
+  const audioUrlOne =
     "https://commondatastorage.googleapis.com/codeskulptor-demos/DDR_assets/Kangaroo_MusiQue_-_The_Neverwritten_Role_Playing_Game.mp3";
+  const audioUrlTwo =
+    "https://commondatastorage.googleapis.com/codeskulptor-assets/sounddogs/thrust.mp3";
 
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [totalTime, setTotalTime] = useState(0);
+  const [selectedAudio, setSelectedAudio] = useState("audioOne");
+
+  const getAudioUrl = (key: string) => {
+    switch (key) {
+      case "audioOne":
+        return audioUrlOne;
+      case "audioTwo":
+        return audioUrlTwo;
+      default:
+        return "audioOne";
+    }
+  };
 
   useEffect(() => {
-    const audio = new Audio(audioUrl);
+    const audio = new Audio(getAudioUrl(selectedAudio));
     audioRef.current = audio;
 
     const handleLoadedMetadata = () => {
@@ -24,7 +38,7 @@ const AudioPlayer: React.FC = () => {
       audio.removeEventListener("loadedmetadata", handleLoadedMetadata);
       audio.pause();
     };
-  }, [audioUrl]);
+  }, [selectedAudio]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -80,6 +94,19 @@ const AudioPlayer: React.FC = () => {
         value={currentTime}
         onChange={handleSeek}
       />
+
+      <label>
+        Choose a song
+        <select
+          name="songs"
+          id="songs"
+          value={selectedAudio}
+          onChange={(e) => setSelectedAudio(e.target.value)}
+        >
+          <option value="audioOne">audioOne</option>
+          <option value="audioTwo">audioTwo</option>
+        </select>
+      </label>
 
       <span>Current Time: {currentTime.toFixed(2)}s</span>
       <span>Total: {totalTime.toFixed(2)}s</span>
