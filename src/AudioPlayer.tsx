@@ -62,9 +62,9 @@ const AudioPlayer: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    if (audioRef.current) {
-      audioRef.current.volume = volume;
-    }
+    if (!audioRef.current) return;
+
+    audioRef.current.volume = volume;
   }, [volume]);
 
   useEffect(() => {
@@ -92,6 +92,7 @@ const AudioPlayer: React.FC = () => {
 
   useEffect(() => {
     if (!audioRef.current) return;
+
     audioRef.current.src = currentAudio.url;
     audioRef.current.load();
     setCurrentTime(0);
