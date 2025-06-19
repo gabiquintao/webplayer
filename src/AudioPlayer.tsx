@@ -1,29 +1,31 @@
 import React, { useRef, useState, useEffect } from "react";
 
+const base = import.meta.env.BASE_URL;
+
 const playlist = [
   {
     title: "In My Feelings",
     artist: "Drake",
     album: "Scorpion",
     year: "2018",
-    url: "${base}/in-my-feelings.mp3",
-    image: "/in-my-feelings.jpeg",
+    url: `${base}in-my-feelings.mp3`,
+    image: `${base}in-my-feelings.jpeg`,
   },
   {
     title: "Let It All Work Out",
     artist: "Lil Wayne",
     album: "Tha Carter V",
     year: "2018",
-    url: "${base}/let-it-all-work-out.mp3",
-    image: "/let-it-all-work-out.jpg",
+    url: `${base}let-it-all-work-out.mp3`,
+    image: `${base}let-it-all-work-out.jpg`,
   },
   {
     title: "Stories About My Brother",
     artist: "Drake",
     album: "For All the Dogs",
     year: "2023",
-    url: "${base}/stories-about-my-brother.mp3",
-    image: "/stories-about-my-brother.jpg",
+    url: `${base}stories-about-my-brother.mp3`,
+    image: `${base}stories-about-my-brother.jpg`,
   },
 ];
 
