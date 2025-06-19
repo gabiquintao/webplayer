@@ -25,7 +25,7 @@ A web-based music player built with React and TypeScript.
 ## Mobile Note
 Volume control is not available on mobile devices due to browser restrictions.
 
-## 🛠️ Built With
+## Built With
 - React
 - TypeScript
 - Vite
