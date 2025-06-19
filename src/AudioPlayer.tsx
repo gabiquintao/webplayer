@@ -6,7 +6,7 @@ const playlist = [
     artist: "Drake",
     album: "Scorpion",
     year: "2018",
-    url: "/in-my-feelings.mp3",
+    url: "${base}/in-my-feelings.mp3",
     image: "/in-my-feelings.jpeg",
   },
   {
@@ -14,7 +14,7 @@ const playlist = [
     artist: "Lil Wayne",
     album: "Tha Carter V",
     year: "2018",
-    url: "/let-it-all-work-out.mp3",
+    url: "${base}/let-it-all-work-out.mp3",
     image: "/let-it-all-work-out.jpg",
   },
   {
@@ -22,7 +22,7 @@ const playlist = [
     artist: "Drake",
     album: "For All the Dogs",
     year: "2023",
-    url: "/stories-about-my-brother.mp3",
+    url: "${base}/stories-about-my-brother.mp3",
     image: "/stories-about-my-brother.jpg",
   },
 ];
